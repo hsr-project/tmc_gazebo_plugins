@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>tmc_gazebo_plugins</name>
-  <version>0.12.0</version>
+  <version>1.0.0</version>
   <description>
     mimic_plugin for interpreting mimic tag for urdf.
   </description>
