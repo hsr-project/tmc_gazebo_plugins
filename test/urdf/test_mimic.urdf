@@ -1,0 +1,154 @@
+<!--
+Copyright (c) 2016 TOYOTA MOTOR CORPORATION
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+ * Redistributions of source code must retain the above copyright notice,
+ this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
+ * Neither the name of Toyota Motor Corporation nor the names of its
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+-->
+<robot name="boxes_mimic">
+
+  <link name="boxone">
+    <inertial>
+      <mass value="10.0" />
+      <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"
+		iyy="1.0"  iyz="0.0"  izz="1.0" />
+    </inertial>
+    <visual>
+      <geometry>
+        <box size="1.0 1.0 1.0" />
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="1.0 1.0 1.0" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="jointone" type="continuous">
+    <origin xyz="0.0 1.0 0.0" />
+    <axis xyz="1.0 0.0 0.0" />
+    <limit effort="100.0" velocity="10.0" />
+    <parent link="boxone" />
+    <child link="boxtwo" />
+  </joint>
+
+  <link name="boxtwo">
+    <inertial>
+      <mass value="1.0" />
+      <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"
+		iyy="1.0"  iyz="0.0"  izz="1.0" />
+    </inertial>
+    <visual>
+      <geometry>
+        <box size="1.0 1.0 1.0" />
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="1.0 1.0 1.0" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="jointtwo" type="continuous">
+    <origin xyz="0.0 1.0 0.0" />
+    <axis xyz="1.0 0.0 0.0" />
+    <limit effort="100.0" velocity="10.0" />
+    <parent link="boxtwo" />
+    <child link="boxthree" />
+  </joint>
+
+  <link name="boxthree">
+    <inertial>
+      <mass value="1.0" />
+      <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"
+		iyy="1.0"  iyz="0.0"  izz="1.0" />
+    </inertial>
+    <visual>
+      <geometry>
+        <box size="1.0 1.0 1.0" />
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="1.0 1.0 1.0" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- gazebo -->
+
+  <gazebo reference="jointone">
+    <provideFeedback>true</provideFeedback>
+  </gazebo>
+
+  <gazebo reference="jointtwo">
+    <provideFeedback>true</provideFeedback>
+  </gazebo>
+
+  <transmission name="jointone_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="jointone"/>
+    <actuator name="jointone_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="jointtwo_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="jointtwo"/>
+    <actuator name="jointtwo_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <gazebo reference="boxone">
+  </gazebo>
+
+  <gazebo reference="boxtwo">
+  </gazebo>
+
+  <gazebo reference="boxthree">
+  </gazebo>
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>boxes_mimic</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    </plugin>
+    <plugin name="mimic_plugin" filename="libtmc_gazebo_mimic_plugin.so">
+      <joint>jointtwo</joint>
+      <mimicJoint>jointone</mimicJoint>
+      <multiplier>0.5</multiplier>
+      <p>900.0</p>
+      <i>0.0</i>
+      <d>0.0</d>
+      <i_clamp>0.0</i_clamp>
+    </plugin>
+  </gazebo>
+
+</robot>

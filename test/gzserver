@@ -1,0 +1,35 @@
+#!/bin/sh
+## Copyright (C) John Hsu, Nate Koenig, Dave Coleman (https://github.com/ros-simulation/gazebo_ros_pkgs/tree/hydro-devel/gazebo_ros)
+## This file is not distributed. License notification is not needed.
+final="$@"
+
+EXT=so
+if [ $(uname) = "Darwin" ]; then
+    EXT=dylib
+fi
+
+# add ros path plugin if it does not already exist in the passed in arguments
+if [ `expr "$final" : ".*libgazebo_ros_paths_plugin\.$EXT.*"` -eq 0 ]
+then
+    final="$final -s `catkin_find --first-only libgazebo_ros_paths_plugin.$EXT`"
+fi
+
+# add ros api plugin if it does not already exist in the passed in arguments
+if [ `expr "$final" : ".*libgazebo_ros_api_plugin\.$EXT.*"` -eq 0 ]
+then
+    final="$final -s `catkin_find --first-only libgazebo_ros_api_plugin.$EXT`"
+fi
+RAND=$((`od -vAn -tu2 -N2 </dev/urandom` % 90000))
+PORT=$((RAND + 10000))
+while :
+do
+    IS_USED=`lsof -i :${PORT} | wc -l`
+    if [ $IS_USED -eq 0 ]; then
+	break
+    fi
+    PORT=$((PORT + 1))
+done
+
+setup_path=$(pkg-config --variable=prefix gazebo)/share/gazebo/
+. $setup_path/setup.sh && GAZEBO_MASTER_URI=localhost:${PORT} gzserver $final
+#. $setup_path/setup.sh && gzserver $final
