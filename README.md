@@ -3,7 +3,7 @@ tmc_gazebo_plugins
 
 Overview
 ===========================
-Manages the plugin that can be used regardless of the [Gazebo](http://gazebosim.org/) robot.
+This repository manages the plugin that can be used with any [Gazebo](http://gazebosim.org/) robot.
 
 Plugin
 ===========================
