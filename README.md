@@ -1,15 +1,15 @@
 tmc_gazebo_plugins
 ===========================
 
-概要
+Overview
 ===========================
-[Gazebo](http://gazebosim.org/)用のロボットに関わらず使えるプラグインを管理する。
+This repository manages the plugin that can be used with any [Gazebo](http://gazebosim.org/) robot.
 
-プラグイン
+Plugin
 ===========================
 
 ## mimic_plugin ##
-URDFのmimicタグを解釈するためのプラグイン
+The plugin for interpreting URDF mimic tags.
 
 LICENSE
 ===========================
