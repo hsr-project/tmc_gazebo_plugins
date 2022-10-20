@@ -11,6 +11,12 @@ Plugin
 ## mimic_plugin ##
 The plugin for interpreting URDF mimic tags.
 
+## ros_hrh_gripper ##
+The plugin for High-Ratio-Hypoid gripper.
+
+## ros_bumper ##
+The plugin for bumper.
+
 LICENSE
 ===========================
 This software is released under the BSD 3-Clause Clear License, see LICENSE.txt.

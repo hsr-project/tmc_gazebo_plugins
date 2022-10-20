@@ -1,44 +1,41 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5.0)
 project(tmc_gazebo_plugins)
 
-find_package(catkin REQUIRED COMPONENTS
-  gazebo_ros
-  control_toolbox
-  roscpp
-)
+find_package(ament_cmake REQUIRED)
 
-find_package(gazebo REQUIRED)
+find_package(angles REQUIRED)
+find_package(control_msgs REQUIRED)
+find_package(control_toolbox REQUIRED)
+find_package(gazebo_dev REQUIRED)
+find_package(gazebo_msgs REQUIRED)
+find_package(gazebo_ros REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
+find_package(tmc_control_msgs REQUIRED)
+find_package(trajectory_msgs REQUIRED)
 
-catkin_package(
-  DEPENDS
-  CATKIN_DEPENDS roscpp gazebo_ros control_toolbox
-  INCLUDE_DIRS
-  LIBRARIES tmc_gazebo_mimic_plugin
-  CFG_EXTRAS
-)
+add_library(tmc_gazebo_ros_mimic_joint SHARED src/gazebo_ros_mimic_joint.cpp)
+ament_target_dependencies(tmc_gazebo_ros_mimic_joint gazebo_dev gazebo_ros rclcpp)
 
-if(CMAKE_VERSION VERSION_LESS "3.1")
-    add_compile_options(-std=c++11)
-else()
-    set(CMAKE_CXX_STANDARD 11)
-endif()
+add_library(tmc_gazebo_ros_hrh_gripper SHARED src/gazebo_ros_hrh_gripper.cpp)
+ament_target_dependencies(tmc_gazebo_ros_hrh_gripper angles control_msgs control_toolbox gazebo_dev gazebo_ros rclcpp rclcpp_action tmc_control_msgs trajectory_msgs)
 
-link_directories(${GAZEBO_LIBRARY_DIRS})
-include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS})
+add_library(tmc_gazebo_ros_bumper SHARED src/gazebo_ros_bumper.cpp)
+ament_target_dependencies(tmc_gazebo_ros_bumper gazebo_ros)
 
-add_library(tmc_gazebo_mimic_plugin src/mimic_plugin.cpp)
-target_link_libraries(tmc_gazebo_mimic_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+install(TARGETS tmc_gazebo_ros_mimic_joint tmc_gazebo_ros_hrh_gripper tmc_gazebo_ros_bumper
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
 
-if(CATKIN_ENABLE_TESTING)
-    find_package(rostest REQUIRED)
+ament_export_dependencies(ament_cmake)
+ament_export_dependencies(angles)
+ament_export_dependencies(gazebo_dev)
+ament_export_dependencies(rclcpp)
+ament_export_dependencies(trajectory_msgs)
 
-    add_rostest_gtest(test_mimic test/test_mimic.test test/test_mimic.cpp)
-    target_link_libraries(test_mimic ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES} ${GTEST_LIBRARIES})
-endif()
+ament_export_libraries(tmc_gazebo_mimic_plugin)
+ament_export_libraries(tmc_gazebo_ros_hrh_gripper)
+ament_export_libraries(tmc_gazebo_ros_bumper)
 
-install(
-  TARGETS tmc_gazebo_mimic_plugin
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+ament_package()

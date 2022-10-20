@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>tmc_gazebo_plugins</name>
-  <version>1.0.0</version>
+  <version>2.0.0</version>
   <description>
-    mimic_plugin for interpreting mimic tag for urdf.
+    Plugins for gazebo.
   </description>
   <maintainer email="xr-hsr-support@mail.toyota.co.jp">HSR Support</maintainer>
 
@@ -19,20 +19,19 @@
   <author>Yoshimi Iyoda</author>
   <author>Yosuke Matsusaka</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>gazebo</build_depend>
-  <build_depend>gazebo_ros</build_depend>
-  <build_depend>roscpp</build_depend>
-  <build_depend>control_toolbox</build_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <run_depend>gazebo</run_depend>
-  <run_depend>gazebo_ros</run_depend>
-  <run_depend>roscpp</run_depend>
-  <run_depend>control_toolbox</run_depend>
+  <depend>angles</depend>
+  <depend>control_msgs</depend>
+  <depend>control_toolbox</depend>
+  <depend>gazebo_dev</depend>
+  <depend>gazebo_ros</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_action</depend>
+  <depend>tmc_control_msgs</depend>
+  <depend>trajectory_msgs</depend>
 
-  <test_depend>rostest</test_depend>
-  <test_depend>gazebo_ros_control</test_depend>
-  <test_depend>controller_manager</test_depend>
-  <test_depend>joint_state_controller</test_depend>
-  <test_depend>effort_controllers</test_depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>
